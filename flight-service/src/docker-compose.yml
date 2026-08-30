@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: flight-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-flight_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-flight_pass}
+      POSTGRES_DB: ${DB_NAME:-flight_service_db}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-flight_user}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
